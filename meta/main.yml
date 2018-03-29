@@ -1,0 +1,13 @@
+galaxy_info:
+  author: Ona Engineering, 030 
+  description: Sets up Lets Encrypt certificates 
+  license: 'MIT'
+  min_ansible_version: 2.4
+  platforms:
+  - name: Ubuntu
+    versions:
+    - xenial
+  galaxy_tags:
+    - certbot
+
+dependencies: []
