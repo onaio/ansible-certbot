@@ -6,6 +6,7 @@
   service:
     name: "{{ certbot_webserver_installed }}"
     state: stopped
+  ignore_errors: yes
 
 - name: Check whether port 80 is available
   wait_for:
@@ -35,3 +36,4 @@
   service:
     name: "{{ certbot_webserver_installed }}"
     state: started
+  ignore_errors: yes
