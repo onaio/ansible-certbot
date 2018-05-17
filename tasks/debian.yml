@@ -3,3 +3,11 @@
   apt:
     name: "letsencrypt={{ certbot_letsencrypt_version }}"
     state: present
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release != 'trusty'
+
+- name: letsencrypt install ubuntu 14.04
+  get_url:
+    url: https://dl.eff.org/certbot-auto
+    dest: /usr/bin/letsencrypt
+    mode: 0655
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
