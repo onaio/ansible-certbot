@@ -1,13 +1,15 @@
 ---
-- name: letsencrypt installed
-  apt:
-    name: "letsencrypt={{ certbot_letsencrypt_version }}"
-    state: present
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release != 'trusty'
+- name: Install Certbot on Ubuntu
+  block:
+    - name: Certbot PPA
+      apt_repository:
+        repo: "ppa:certbot/certbot"
+        state: present
+        update_cache: no
 
-- name: letsencrypt install ubuntu 14.04
-  get_url:
-    url: https://dl.eff.org/certbot-auto
-    dest: /usr/bin/letsencrypt
-    mode: 0655
-  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
+    - name: Install certbot nginx plugin
+      apt:
+        name: "python-certbot-nginx={{ certbot_version }}"
+        state: present
+        update_cache: yes
+  when: ansible_distribution == 'Ubuntu'

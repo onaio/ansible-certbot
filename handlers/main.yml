@@ -1,0 +1,4 @@
+- name: restart certbot
+  command: certbot --nginx --agree-tos -m {{ certbot_mail_address }} -n -d {{ site_name }}
+  when: certbot_create_certs
+

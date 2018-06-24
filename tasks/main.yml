@@ -2,25 +2,11 @@
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
 
-- name: Stop webserver
-  service:
-    name: "{{ certbot_webserver_installed }}"
-    state: stopped
-  ignore_errors: yes
-
-- name: Check whether port 80 is available
-  wait_for:
-    port: 80
-    state: stopped
-    timeout: "{{ certbot_waitfor_port_seconds }}"
-
-- name: Create certs
-  command: letsencrypt certonly --standalone -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text
+- name: Create certs only
+  command: certbot certonly --nginx --agree-tos -m {{ certbot_mail_address }} -n -d {{ site_name }}
   args:
     creates: "{{ certbot_crt }}"
   when: certbot_create_certs
-
-- include_tasks: copy-files.yml
 
 - name: Renew certs every month
   cron:
@@ -29,11 +15,5 @@
     hour: "{{ certbot_renew_certs_hour }}"
     month: "{{ certbot_renew_certs_month }}"
     weekday: "{{ certbot_renew_certs_weekday }}"
-    job: /usr/bin/letsencrypt renew
+    job: /usr/bin/certbot renew -q
   when: certbot_create_certs
-
-- name: Start webserver
-  service:
-    name: "{{ certbot_webserver_installed }}"
-    state: started
-  ignore_errors: yes
