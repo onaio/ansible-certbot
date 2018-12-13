@@ -1,11 +1,33 @@
 ---
-- hosts: localhost
-
+- hosts: website
+  become: true
+  vars:
+    test_domain_name: "www.example.com"
+    test_email_address: "info@example.com"
   pre_tasks:
     - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
+      sudo: yes
+      apt: update_cache=yes
       when: ansible_os_family == 'Debian'
       changed_when: false
 
   roles:
-    - role_under_test
+    - role: nginx
+      nginx_install_method: "package"
+      nginx_sites:
+        - server:
+            name: "{{ test_domain_name }}"
+            __listen: "80;"
+            server_name: "{{ test_domain_name }}"
+            ssl:
+              enabled: false
+      nginx_enabled_sites:
+        - "{{ test_domain_name }}"
+    - role: certbot
+      vars:
+        certbot_create_certs: true
+        certbot_package:  "python-certbot-nginx"
+        certbot_plugin:  "nginx"
+        certbot_install_cert: true
+        site_name: "{{ test_domain_name }}"
+        certbot_mail_address: "test_email_address"

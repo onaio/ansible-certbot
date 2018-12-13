@@ -6,3 +6,6 @@ certbot_renew_certs_weekday: 1
 certbot_waitfor_port_seconds: 3
 certbot_webserver_installed: "nginx"
 certbot_letsencrypt_version: "0.4.1-1"
+certbot_package: "certbot" # can be certbot, python-certbot-nginx, python-certbot-apache
+certbot_plugin: "standalone" # can be apache, webroot, nginx or standalone
+certbot_install_cert: false # false will use certonly, true will use the plugin configured to add the ssl configs to the sites congig.
