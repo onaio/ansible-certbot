@@ -1,39 +1,50 @@
 ---
 - include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+- name: make port 80 available for certbot standalone to work
+  block:
+    - name: Stop webserver
+      service:
+        name: "{{ certbot_webserver_installed }}"
+        state: stopped
+      ignore_errors: yes
 
-- name: Stop webserver
-  service:
-    name: "{{ certbot_webserver_installed }}"
-    state: stopped
-  ignore_errors: yes
-
-- name: Check whether port 80 is available
-  wait_for:
-    port: 80
-    state: stopped
-    timeout: "{{ certbot_waitfor_port_seconds }}"
+    - name: Check whether port 80 is available
+      wait_for:
+        port: 80
+        state: stopped
+        timeout: "{{ certbot_waitfor_port_seconds }}"
+  when: certbot_plugin == "standalone"
 
 - name: Create certs
-  command: letsencrypt certonly --standalone -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text
+  command: certbot certonly --{{ certbot_plugin }} -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text
   args:
     creates: "{{ certbot_crt }}"
-  when: certbot_create_certs
+  when:
+    - certbot_create_certs
+    - not certbot_install_cert
+
+- name: Create and install cert using {{ certbot_plugin }} plugin
+  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text"
+  when: certbot_install_cert
 
 - include_tasks: copy-files.yml
 
-- name: Renew certs every month
+- name: Create cron job to renew certs every month
   cron:
     name: renewCertbotCerts
     minute: "{{ certbot_renew_certs_minute }}"
     hour: "{{ certbot_renew_certs_hour }}"
     month: "{{ certbot_renew_certs_month }}"
     weekday: "{{ certbot_renew_certs_weekday }}"
-    job: /usr/bin/letsencrypt renew
-  when: certbot_create_certs
+    job: /usr/bin/certbot renew --prehook "service {{ certbot_webserver_installed }} stop" --post-hook "service {{ certbot_webserver_installed }} start"
+  when:
+    - certbot_create_certs
+    - certbot_plugin == "standalone"
 
 - name: Start webserver
   service:
     name: "{{ certbot_webserver_installed }}"
     state: started
   ignore_errors: yes
+  when: certbot_plugin == "standalone"
