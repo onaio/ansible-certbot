@@ -2,20 +2,20 @@
 - block:
   - name: Copy the systemd service and timer files
     template:
-        src: "etc/systemd/system/certbot-renew-certbot_cert_name.{{ item }}.j2"
-        desc: "/etc/systemd/system/certbot-renew-{{ certbot_cert_name }}.{{ item }}.j2"
-        owner: root
-        group: root
-        mode: 0644
+      src: "etc/systemd/system/certbot-renew-certbot_cert_name.{{ item }}.j2"
+      dest: "/etc/systemd/system/certbot-renew-{{ certbot_cert_name }}.{{ item }}"
+      owner: root
+      group: root
+      mode: 0644
     with_items:
-        - service
-        - timer
+      - service
+      - timer
 
   - name: Enable the systemd timer
     systemd:
-        name: "certbot-renew-{{ certbot_cert_name }}.timer"
-        daemon_reload: yes
-        enabled: yes
+      name: "certbot-renew-{{ certbot_cert_name }}.timer"
+      daemon_reload: yes
+      enabled: yes
   when:
     - certbot_create_certs
     - certbot_plugin == "standalone"
