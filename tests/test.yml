@@ -29,5 +29,7 @@
         certbot_package:  "python-certbot-nginx"
         certbot_plugin:  "nginx"
         certbot_install_cert: true
-        site_name: "{{ test_domain_name }}"
+        certbot_site_names:
+          - "{{ test_domain_name }}"
+          - "www.{{ test_domain_name }}"
         certbot_mail_address: "test_email_address"
