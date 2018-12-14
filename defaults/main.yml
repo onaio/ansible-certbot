@@ -3,11 +3,14 @@ certbot_renew_certs_minute: 12,45
 certbot_renew_certs_hour: 8
 certbot_renew_certs_month: '*/1'
 certbot_renew_certs_weekday: 1
+certbot_renew_certs_systemd_oncalendar: "7day"
+certbot_renew_certs_systemd_rand_sec: 3600
+certbot_renew_method: systemd
 certbot_waitfor_port_seconds: 3
 certbot_webserver_installed: "nginx"
 certbot_letsencrypt_version: "0.4.1-1"
 certbot_package: "certbot" # can be certbot, python-certbot-nginx, python-certbot-apache
 certbot_plugin: "standalone" # can be apache, webroot, nginx or standalone
 certbot_install_cert: false # false will use certonly, true will use the plugin configured to add the ssl configs to the sites congig.
-certbot_renew_prehook: "service {{ certbot_webserver_installed }} stop"
-certbot_renew_posthook: "service {{ certbot_webserver_installed }} start"
+certbot_renew_prehook: "/usr/sbin/service {{ certbot_webserver_installed }} stop"
+certbot_renew_posthook: "/usr/sbin/service {{ certbot_webserver_installed }} start"
