@@ -16,6 +16,7 @@
       name: "certbot-renew-{{ certbot_cert_name }}.timer"
       daemon_reload: yes
       enabled: yes
+      state: restarted
   when:
     - certbot_create_certs
     - certbot_plugin == "standalone"
