@@ -16,17 +16,8 @@
         timeout: "{{ certbot_waitfor_port_seconds }}"
   when: certbot_plugin == "standalone"
 
-- name: Create certs
-  command: certbot certonly --{{ certbot_plugin }} -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text
-  args:
-    creates: "{{ certbot_crt }}"
-  when:
-    - certbot_create_certs
-    - not certbot_install_cert
-
 - name: Create and install cert using {{ certbot_plugin }} plugin
-  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} -d {{ site_name }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text"
-  when: certbot_install_cert
+  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} -d {{ certbot_site_names | join(', ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name | default(certbot_site_names[0]) }}"
 
 - include_tasks: copy-files.yml
 
@@ -37,7 +28,7 @@
     hour: "{{ certbot_renew_certs_hour }}"
     month: "{{ certbot_renew_certs_month }}"
     weekday: "{{ certbot_renew_certs_weekday }}"
-    job: /usr/bin/certbot renew --prehook "service {{ certbot_webserver_installed }} stop" --post-hook "service {{ certbot_webserver_installed }} start"
+    job: /usr/bin/certbot renew --prehook "{{ certbot_renew_prehook }}" --post-hook "{{ certbot_renew_posthook }}"
   when:
     - certbot_create_certs
     - certbot_plugin == "standalone"
