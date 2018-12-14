@@ -1,0 +1,7 @@
+[Unit]
+Description=Renew Let's Encrypt certificates for {{ certbot_cert_name }}
+
+[Service]
+Type=oneshot
+# check for renewal, only start/stop nginx if certs need to be renewed
+ExecStart={{ certbot_autorenew_command }}

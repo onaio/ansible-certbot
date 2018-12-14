@@ -21,17 +21,7 @@
 
 - include_tasks: copy-files.yml
 
-- name: Create cron job to renew certs every month
-  cron:
-    name: renewCertbotCerts
-    minute: "{{ certbot_renew_certs_minute }}"
-    hour: "{{ certbot_renew_certs_hour }}"
-    month: "{{ certbot_renew_certs_month }}"
-    weekday: "{{ certbot_renew_certs_weekday }}"
-    job: /usr/bin/certbot renew --prehook "{{ certbot_renew_prehook }}" --post-hook "{{ certbot_renew_posthook }}"
-  when:
-    - certbot_create_certs
-    - certbot_plugin == "standalone"
+- include_tasks: "autorenew-{{ certbot_renew_method }}.yml"
 
 - name: Start webserver
   service:

@@ -1,0 +1,12 @@
+---
+- name: Create cron job to renew certs every month
+  cron:
+    name: renewCertbotCerts
+    minute: "{{ certbot_renew_certs_minute }}"
+    hour: "{{ certbot_renew_certs_hour }}"
+    month: "{{ certbot_renew_certs_month }}"
+    weekday: "{{ certbot_renew_certs_weekday }}"
+    job: "{{ certbot_autorenew_command }}"
+  when:
+    - certbot_create_certs
+    - certbot_plugin == "standalone"

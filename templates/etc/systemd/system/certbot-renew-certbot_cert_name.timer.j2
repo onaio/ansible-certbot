@@ -1,0 +1,10 @@
+[Unit]
+Description=Renews Let's Encrypt Certificates for {{ certbot_cert_name }}
+
+[Timer]
+OnCalendar={{ certbot_renew_certs_systemd_oncalendar }}
+RandomizedDelaySec={{ certbot_renew_certs_systemd_rand_sec }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -22,6 +22,9 @@ By default, neither certs will be created, nor renewed.
     certbot_cert_name: {{ certbot_site_names[0] }}
     certbot_renew_prehook: "service {{ certbot_webserver_installed }} stop"
     certbot_renew_posthook: "service {{ certbot_webserver_installed }} start"
+    certbot_renew_certs_systemd_oncalendar: # After how long to run the systemd timer for auto-renewing certificates. Check [systemd time](https://www.freedesktop.org/software/systemd/man/systemd.time.html#) for acceptable formats.
+    certbot_renew_certs_systemd_rand_sec: # Maximum random number of seconds to wait before actually running the renew command. Useful if you don't want to always hit the Let's Encrypt servers at a specific time
+    certbot_renew_method: # Could either be cron or systemd
 
 The email address that receives notifications when certs are going to be expired is empty by default and needs to be set otherwise the run will fail.
 
