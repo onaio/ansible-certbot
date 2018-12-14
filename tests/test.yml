@@ -18,7 +18,7 @@
         - server:
             name: "{{ test_domain_name }}"
             __listen: "80;"
-            server_name: "{{ test_domain_name }}"
+            server_name: "{{ test_domain_name }} www.{{ test_domain_name }}"
             ssl:
               enabled: false
       nginx_enabled_sites:
@@ -32,4 +32,4 @@
         certbot_site_names:
           - "{{ test_domain_name }}"
           - "www.{{ test_domain_name }}"
-        certbot_mail_address: "test_email_address"
+        certbot_mail_address: "{{ test_email_address }}"
