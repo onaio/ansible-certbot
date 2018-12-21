@@ -3,7 +3,7 @@
   - name: Copy the systemd service and timer files
     template:
       src: "etc/systemd/system/certbot-renew-certbot_cert_name.{{ item }}.j2"
-      dest: "/etc/systemd/system/certbot-renew-{{ certbot_cert_name }}.{{ item }}"
+      dest: "/etc/systemd/system/certbot-renew-{{ certbot_cert_name | default(certbot_site_names[0] )}}.{{ item }}"
       owner: root
       group: root
       mode: 0644
@@ -13,7 +13,7 @@
 
   - name: Enable the systemd timer
     systemd:
-      name: "certbot-renew-{{ certbot_cert_name }}.timer"
+      name: "certbot-renew-{{ certbot_cert_name | default(certbot_site_names[0]) }}.timer"
       daemon_reload: yes
       enabled: yes
       state: restarted

@@ -14,3 +14,4 @@ certbot_plugin: "standalone" # can be apache, webroot, nginx or standalone
 certbot_install_cert: false # false will use certonly, true will use the plugin configured to add the ssl configs to the sites congig.
 certbot_renew_prehook: "/usr/sbin/service {{ certbot_webserver_installed }} stop"
 certbot_renew_posthook: "/usr/sbin/service {{ certbot_webserver_installed }} start"
+certbot_cert_name: "{{ certbot_site_names[0] }}"
