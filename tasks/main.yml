@@ -17,7 +17,7 @@
   when: certbot_plugin == "standalone"
 
 - name: Create and install cert using {{ certbot_plugin }} plugin
-  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name | default(certbot_site_names[0]) }}"
+  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name }}"
 
 - include_tasks: copy-files.yml
 
