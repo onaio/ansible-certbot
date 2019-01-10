@@ -4,4 +4,4 @@ certbot_fqdn_home: "{{ certbot_live_home }}/{{ certbot_site_names[0] }}"
 certbot_chain: "{{ certbot_fqdn_home }}/chain.pem"
 certbot_fullchain: "{{ certbot_fqdn_home }}/fullchain.pem"
 certbot_live_home: /etc/letsencrypt/live
-certbot_autorenew_command: /usr/bin/certbot renew --prehook "{{ certbot_renew_prehook }}" --post-hook "{{ certbot_renew_posthook }}"
+certbot_autorenew_command: /usr/bin/certbot renew --pre-hook "{{ certbot_renew_prehook }}" --post-hook "{{ certbot_renew_posthook }}"
