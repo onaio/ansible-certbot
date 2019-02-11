@@ -7,6 +7,4 @@
     month: "{{ certbot_renew_certs_month }}"
     weekday: "{{ certbot_renew_certs_weekday }}"
     job: "{{ certbot_autorenew_command }}"
-  when:
-    - certbot_create_certs
-    - certbot_plugin == "standalone"
+  when: certbot_plugin == "standalone"
