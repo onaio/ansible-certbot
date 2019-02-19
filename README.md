@@ -18,6 +18,7 @@ By default, neither certs will be created, nor renewed.
     certbot_package: "certbot" # can be certbot, python-certbot-nginx, python-certbot-apache
     certbot_plugin: "standalone" # can be apache, webroot, nginx or standalone
     certbot_install_cert: false # false will use certonly, true will use the plugin configured to add the ssl configs to the sites config.
+    certbot_redirect_http: false # True will redirect all http traffic to https
     certbot_site_names: ["example.com","www.example.com"] # List of domain names to get certificates for.
     certbot_cert_name: {{ certbot_site_names[0] }}
     certbot_renew_prehook: "service {{ certbot_webserver_installed }} stop"
