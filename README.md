@@ -29,6 +29,12 @@ By default, neither certs will be created, nor renewed.
 
 The email address that receives notifications when certs are going to be expired is empty by default and needs to be set otherwise the run will fail.
 
+**Note on Certbot plugins that modify the virtual site files**
+
+- Setting `certbot_install_cert:true` modifys the virtual site file to add directives for including ssl certificate, key and default letsencrypt SSL configuration
+
+- Setting `certbot_redirect_http:true` will modify the virtual site file to add dirctives to redirect all http traffic to https.
+
 ## Dependencies
 
 None.
