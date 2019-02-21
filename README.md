@@ -33,7 +33,7 @@ The email address that receives notifications when certs are going to be expired
 
 - Setting `certbot_install_cert:true` modifies the virtual site file to add directives for including ssl certificate, key and default Let's Encrypt SSL configuration
 
-- Setting `certbot_redirect_http:true` will modify the virtual site file to add dirctives to redirect all http traffic to https.
+- Setting `certbot_redirect_http:true` will modify the virtual site file to add dirctives to redirect all HTTP traffic to HTTPS. HTTPS configuration (including supported TLS versions, whether to include the HSTS header, and which cipher suits are supported) is done by the certbot package.
 
 ## Dependencies
 
