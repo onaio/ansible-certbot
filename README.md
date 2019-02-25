@@ -18,6 +18,7 @@ By default, neither certs will be created, nor renewed.
     certbot_package: "certbot" # can be certbot, python-certbot-nginx, python-certbot-apache
     certbot_plugin: "standalone" # can be apache, webroot, nginx or standalone
     certbot_install_cert: false # false will use certonly, true will use the plugin configured to add the ssl configs to the sites config.
+    certbot_redirect_http: false # True will redirect all http traffic to https
     certbot_site_names: ["example.com","www.example.com"] # List of domain names to get certificates for.
     certbot_cert_name: {{ certbot_site_names[0] }}
     certbot_renew_prehook: "service {{ certbot_webserver_installed }} stop"
@@ -27,6 +28,12 @@ By default, neither certs will be created, nor renewed.
     certbot_renew_method: # Could either be cron or systemd
 
 The email address that receives notifications when certs are going to be expired is empty by default and needs to be set otherwise the run will fail.
+
+**Note on Certbot plugins that modify the virtual site files**
+
+- Setting `certbot_install_cert:true` modifies the virtual site file to add directives for including ssl certificate, key and default Let's Encrypt SSL configuration
+
+- Setting `certbot_redirect_http:true` will modify the virtual site file to add dirctives to redirect all HTTP traffic to HTTPS. HTTPS configuration (including supported TLS versions, whether to include the HSTS header, and which cipher suits are supported) is done by the certbot package.
 
 ## Dependencies
 
