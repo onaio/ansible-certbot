@@ -18,6 +18,8 @@
 
 - name: Create and install cert using {{ certbot_plugin }} plugin
   command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} {{ (certbot_redirect_http) | ternary('--redirect','') }} -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name }}"
+  retries: 3
+  delay: 5
 
 - include_tasks: copy-files.yml
 
