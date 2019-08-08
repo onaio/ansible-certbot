@@ -14,14 +14,16 @@
         port: 80
         state: stopped
         timeout: "{{ certbot_waitfor_port_seconds }}"
-  when: certbot_plugin == "standalone"
+  when: certbot_plugin == "standalone" and certbot_create_certs
 
 - name: Create and install cert using {{ certbot_plugin }} plugin
   command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} {{ (certbot_redirect_http) | ternary('--redirect','') }} -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name }}"
   retries: 3
   delay: 5
+  when: certbot_create_certs
 
 - include_tasks: copy-files.yml
+  when: certbot_create_certs
 
 - include_tasks: "autorenew-{{ certbot_renew_method }}.yml"
 
@@ -30,4 +32,4 @@
     name: "{{ certbot_webserver_installed }}"
     state: started
   ignore_errors: yes
-  when: certbot_plugin == "standalone"
+  when: certbot_plugin == "standalone" and certbot_create_certs
