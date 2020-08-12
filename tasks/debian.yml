@@ -11,6 +11,7 @@
     state: present
   with_items:
     - "ppa:certbot/certbot"
+  when: ansible_distribution == "Ubuntu" and ansible_distribution_version is version_compare('20.04', '<')
 
 - name: Certbot | Install package
   become: true
