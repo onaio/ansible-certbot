@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: certbot
+  namespace: onaio
   author: Ona Engineering, 030 
   description: Sets up Lets Encrypt certificates 
   license: 'MIT'
@@ -6,7 +8,8 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-    - xenial
+    - 22.04
+    - 24.04
   galaxy_tags:
     - certbot
 

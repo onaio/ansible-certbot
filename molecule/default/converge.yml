@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    certbot_site_names:
+      - example.org
+  pre_tasks:
+    - name: Install nginx, which the role stops and starts
+      ansible.builtin.apt:
+        name: nginx
+        update_cache: true
+  roles:
+    - role: ../../..
