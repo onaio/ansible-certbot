@@ -10,11 +10,12 @@
     with_items:
       - service
       - timer
+    register: certbot_renew_units
 
   - name: Enable the systemd timer
     systemd:
       name: "certbot-renew.timer"
       daemon_reload: yes
       enabled: yes
-      state: restarted
+      state: "{{ 'restarted' if certbot_renew_units is changed else 'started' }}"
   when: certbot_plugin == "standalone"
