@@ -1,75 +1,60 @@
 ---
-- name: Get SSL certificate directory name
-  command: "dirname {{ certbot_dest_cert_file }}"
-  register: dest_cert_dir
-  when: certbot_dest_cert_file is defined
-
-- debug:
-    msg: "Dest directory {{ dest_cert_dir }}"
-
 - name: Make sure the SSL certificate directory exists
-  file:
-    path: "{{ dest_cert_dir }}"
+  ansible.builtin.file:
+    path: "{{ certbot_dest_cert_file | dirname }}"
     state: directory
+    mode: "0755"
   when: certbot_dest_cert_file is defined
 
 - name: Copy SSL certificate file
-  copy:
-    remote_src: yes
+  ansible.builtin.copy:
+    remote_src: true
     src: "{{ certbot_crt }}"
     dest: "{{ certbot_dest_cert_file }}"
+    mode: preserve
   when: certbot_dest_cert_file is defined
 
-- name: Get SSL fullchain directory name
-  command: "dirname {{ certbot_dest_fullchain_file }}"
-  register: dest_fullchain_dir
-  when: certbot_dest_fullchain_file is defined
-
 - name: Make sure the SSL fullchain directory exists
-  file:
-    path: "{{ dest_fullchain_dir }}"
+  ansible.builtin.file:
+    path: "{{ certbot_dest_fullchain_file | dirname }}"
     state: directory
+    mode: "0755"
   when: certbot_dest_fullchain_file is defined
 
 - name: Copy SSL fullchain file
-  copy:
-    remote_src: yes
+  ansible.builtin.copy:
+    remote_src: true
     src: "{{ certbot_fullchain }}"
     dest: "{{ certbot_dest_fullchain_file }}"
+    mode: preserve
   when: certbot_dest_fullchain_file is defined
 
-- name: Get SSL key directory name
-  command: "dirname {{ certbot_dest_key_file }}"
-  register: dest_key_dir
-  when: certbot_dest_key_file is defined
-
 - name: Make sure the SSL key directory exists
-  file:
-    path: "{{ dest_key_dir }}"
+  ansible.builtin.file:
+    path: "{{ certbot_dest_key_file | dirname }}"
     state: directory
+    mode: "0755"
   when: certbot_dest_key_file is defined
 
 - name: Copy SSL key file
-  copy:
-    remote_src: yes
+  ansible.builtin.copy:
+    remote_src: true
     src: "{{ certbot_key }}"
     dest: "{{ certbot_dest_key_file }}"
+    mode: preserve
   when: certbot_dest_key_file is defined
 
-- name: Get SSL chain directory name
-  command: "dirname {{ certbot_dest_chain_file }}"
-  register: dest_chain_dir
-  when: certbot_dest_chain_file is defined
-
 - name: Make sure the SSL chain directory exists
-  file:
-    path: "{{ dest_chain_dir }}"
+  ansible.builtin.file:
+    path: "{{ certbot_dest_chain_file | dirname }}"
     state: directory
+    mode: "0755"
   when: certbot_dest_chain_file is defined
 
 - name: Copy SSL chain file
-  copy:
-    remote_src: yes
+  ansible.builtin.copy:
+    remote_src: true
     src: "{{ certbot_chain }}"
     dest: "{{ certbot_dest_chain_file }}"
+    mode: preserve
   when: certbot_dest_chain_file is defined

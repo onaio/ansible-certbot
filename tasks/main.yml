@@ -1,35 +1,46 @@
 ---
-- include_tasks: debian.yml
+- name: Install certbot on Debian
+  ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
-- name: make port 80 available for certbot standalone to work
+
+- name: Make port 80 available for certbot standalone to work
+  when: certbot_plugin == "standalone" and certbot_create_certs|bool
+
   block:
     - name: Stop webserver
-      service:
+      ansible.builtin.service:
         name: "{{ certbot_webserver_installed }}"
         state: stopped
-      ignore_errors: yes
+      failed_when: false
 
     - name: Check whether port 80 is available
-      wait_for:
+      ansible.builtin.wait_for:
         port: 80
         state: stopped
         timeout: "{{ certbot_waitfor_port_seconds }}"
-  when: certbot_plugin == "standalone" and certbot_create_certs|bool
 
-- name: Create and install cert using {{ certbot_plugin }} plugin
-  command: "certbot --{{ certbot_plugin }} {{ (certbot_install_cert) | ternary('','certonly') }} {{ (certbot_redirect_http) | ternary('--redirect','') }} -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }} --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name }}"
+- name: Create and install the certificate with certbot
+  ansible.builtin.command: >-
+    certbot --{{ certbot_plugin }}
+    {{ (certbot_install_cert) | ternary('', 'certonly') }}
+    {{ (certbot_redirect_http) | ternary('--redirect', '') }}
+    -d {{ certbot_site_names | join(' -d ') }} -m {{ certbot_mail_address }}
+    --agree-tos --noninteractive --text --cert-name {{ certbot_cert_name }}
+  changed_when: true
   retries: 3
   delay: 5
   when: certbot_create_certs|bool
 
-- include_tasks: copy-files.yml
+- name: Copy the certificate files
+  ansible.builtin.include_tasks: copy-files.yml
   when: certbot_create_certs
 
-- include_tasks: "autorenew-{{ certbot_renew_method }}.yml"
+- name: Set up certificate renewal
+  ansible.builtin.include_tasks: "autorenew-{{ certbot_renew_method }}.yml"
 
 - name: Start webserver
-  service:
+  ansible.builtin.service:
     name: "{{ certbot_webserver_installed }}"
     state: started
-  ignore_errors: yes
+  failed_when: false
   when: certbot_plugin == "standalone" and certbot_create_certs|bool

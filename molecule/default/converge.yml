@@ -1,0 +1,16 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    certbot_site_names:
+      - example.org
+  pre_tasks:
+    - name: Install nginx, which the role stops and starts
+      ansible.builtin.apt:
+        name: nginx
+        update_cache: true
+  tasks:
+    - name: Run the role
+      ansible.builtin.include_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
