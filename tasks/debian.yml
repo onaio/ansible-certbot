@@ -1,12 +1,14 @@
 ---
-- name: ensure add-apt-repositories is present
+- name: Ensure add-apt-repositories is present
   # sudo apt-get install software-properties-common
   become: true
-  package: name=software-properties-common state=present
+  ansible.builtin.package:
 
+    name: software-properties-common
+    state: present
 - name: Certbot | Add certbot PPAs
   become: true
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
   with_items:
@@ -15,6 +17,6 @@
 
 - name: Certbot | Install package
   become: true
-  apt:
+  ansible.builtin.apt:
     name: "{{ certbot_package }}"
     state: present

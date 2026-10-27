@@ -10,5 +10,7 @@
       ansible.builtin.apt:
         name: nginx
         update_cache: true
-  roles:
-    - role: ../../..
+  tasks:
+    - name: Run the role
+      ansible.builtin.include_role:
+        name: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"

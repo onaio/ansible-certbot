@@ -1,21 +1,22 @@
 ---
-- block:
-  - name: Copy the systemd service and timer files
-    template:
-      src: "etc/systemd/system/certbot-renew.{{ item }}.j2"
-      dest: "/etc/systemd/system/certbot-renew.{{ item }}"
-      owner: root
-      group: root
-      mode: 0644
-    with_items:
-      - service
-      - timer
-    register: certbot_renew_units
-
-  - name: Enable the systemd timer
-    systemd:
-      name: "certbot-renew.timer"
-      daemon_reload: yes
-      enabled: yes
-      state: "{{ 'restarted' if certbot_renew_units is changed else 'started' }}"
+- name: Set up the systemd renewal timer
   when: certbot_plugin == "standalone"
+  block:
+    - name: Copy the systemd service and timer files
+      ansible.builtin.template:
+        src: "etc/systemd/system/certbot-renew.{{ item }}.j2"
+        dest: "/etc/systemd/system/certbot-renew.{{ item }}"
+        owner: root
+        group: root
+        mode: "0644"
+      with_items:
+        - service
+        - timer
+      register: certbot_renew_units
+
+    - name: Enable the systemd timer
+      ansible.builtin.systemd:
+        name: "certbot-renew.timer"
+        daemon_reload: true
+        enabled: true
+        state: "{{ 'restarted' if certbot_renew_units is changed else 'started' }}"

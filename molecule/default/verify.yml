@@ -7,7 +7,7 @@
       ansible.builtin.command: certbot --version
       changed_when: false
 
-    - name: Read the renewal timer state
+    - name: Read the renewal timer state  # noqa: command-instead-of-module
       ansible.builtin.command: systemctl is-enabled certbot-renew.timer
       register: renew_timer
       changed_when: false
