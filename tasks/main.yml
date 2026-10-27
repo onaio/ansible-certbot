@@ -2,6 +2,7 @@
 - name: Install certbot on Debian
   ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == 'Debian'
+
 - name: Make port 80 available for certbot standalone to work
   when: certbot_plugin == "standalone" and certbot_create_certs|bool
 
@@ -17,6 +18,7 @@
         port: 80
         state: stopped
         timeout: "{{ certbot_waitfor_port_seconds }}"
+
 - name: Create and install the certificate with certbot
   ansible.builtin.command: >-
     certbot --{{ certbot_plugin }}

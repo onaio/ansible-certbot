@@ -3,9 +3,9 @@
   # sudo apt-get install software-properties-common
   become: true
   ansible.builtin.package:
-
     name: software-properties-common
     state: present
+
 - name: Certbot | Add certbot PPAs
   become: true
   ansible.builtin.apt_repository:
